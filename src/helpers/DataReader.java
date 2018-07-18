@@ -29,7 +29,6 @@ public class DataReader {
             int aux1 = unparsed.getAsJsonObject("dim").get("max_y").getAsInt();
             shelves = new int[aux1][aux0];
 
-            //TODO mirar si X Y estan en l'ordre correcte
             Punt entrance = new Punt();
             entrance.setY(unparsed.getAsJsonObject("entrance").get("y").getAsInt());
             entrance.setX(unparsed.getAsJsonObject("entrance").get("x").getAsInt());
@@ -82,9 +81,9 @@ public class DataReader {
         return null;
     }
 
-    public float[][] readGraph(String path, Producte[] productes) {
+    public double[][] readGraph(String path, Producte[] productes) {
 
-        float[][] graf = new float[productes.length][productes.length];
+        double[][] graf = new double[productes.length][productes.length];
 
         try {
             BufferedReader bf = new BufferedReader(new FileReader(path));
@@ -93,7 +92,7 @@ public class DataReader {
                 String parts[] = line.split(" ");
                 int id1 = Integer.parseInt(parts[0]);
                 int id2 = Integer.parseInt(parts[1]);
-                graf[getPositionFromID(id1, productes)][getPositionFromID(id2, productes)] = Float.parseFloat(parts[2]);
+                graf[getPositionFromID(id1, productes)][getPositionFromID(id2, productes)] = Double.parseDouble(parts[2]);
             }
         } catch (IOException e) {
             System.out.println("\r\nError, no s'ha trobat el fitxer del graf.\r\n");

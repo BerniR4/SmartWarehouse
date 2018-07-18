@@ -4,7 +4,7 @@ import model.Punt;
 
 public class Marcatge {
     private int[][] numProd;    //num de productes en un punt del magatzem
-    private double afinDist;    //distancia entre els productes * la seva afinitat
+    private long afinDist;    //distancia entre els productes * la seva afinitat
     private int numPrest;       //num de prestatgeries utilitzades
 
     public Marcatge(int maxY, int maxX) {
@@ -13,12 +13,21 @@ public class Marcatge {
         this.afinDist = 0;
     }
 
-    public double getAfinDist() {
+    public long getAfinDist() {
         return afinDist;
     }
 
-    public void setAfinDist(double afinDist) {
+    public void setAfinDist(long afinDist) {
         this.afinDist = afinDist;
+    }
+
+    public void addAfinDist(double value) {
+        this.afinDist += (long) Math.floor(value * Math.pow(10, 6));
+    }
+
+    public void subtractAfinDist(double value) {
+        this.afinDist -= (long) Math.floor(value * Math.pow(10, 6));
+
     }
 
     public void incNumProdIn(Punt p){

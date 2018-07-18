@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class Manager {
     private Producte[] productes;
-    private float[][] graf;
+    private double[][] graf;
     private Warehouse warehouse;
     private Backtracking backtracking;
     private Scanner sc;
@@ -34,7 +34,7 @@ public class Manager {
             case 2:
                 System.out.println("\r\nIntrodueix l'ubicació del fitxer que conté la informació del productes: ");
                 sc.next();
-                productes = dataReader.readProducts("data/products.json");
+                productes = dataReader.readProducts("data/products2.json");
                 System.out.println("\r\nIntrodueix l'ubicació del graf: ");
                 sc.next();
                 graf = dataReader.readGraph("data/graph.txt", productes);

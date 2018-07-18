@@ -8,11 +8,11 @@ public class Backtracking {
     private final static int V_INDEF = -1;
 
     private Punt[] xMillor;
-    private double vMillorAfin;     //millor valor d'afinitat entre els productes
+    private long vMillorAfin;     //millor valor d'afinitat entre els productes
     private int vMillorPrest;       //millor valor de prestatgeries utilitzades
     private Warehouse warehouse;
     private Producte[] productes;
-    private float[][] graf;
+    private double[][] graf;
 
     /*
      * tipus
@@ -25,7 +25,7 @@ public class Backtracking {
      * fitupus
      */
 
-    public Backtracking(Warehouse warehouse, Producte[] productes, float[][] graf) {
+    public Backtracking(Warehouse warehouse, Producte[] productes, double[][] graf) {
         this.xMillor = new Punt[productes.length];
         for (int i = 0; i < xMillor.length; i++) {
             xMillor[i] = new Punt();
@@ -113,7 +113,7 @@ public class Backtracking {
     }
 
     private void marcar(Punt[] x, int k, Marcatge m) {
-        double afinitat = m.getAfinDist();
+        double afinitat = 0.0;
         boolean samePrest = false;
 
         for (int i = 0; i < k; i++) {
@@ -124,23 +124,31 @@ public class Backtracking {
         }
 
         m.incNumProdIn(x[k]);
-        m.setAfinDist(afinitat);
+        m.addAfinDist(afinitat);
         if (!samePrest) m.incNumPrest();
     }
 
     private void desmarcar(Punt[] x, int k, Marcatge m) {
-        double afinitat = m.getAfinDist();
+        double afinitat = 0.0;
         boolean samePrest = false;
 
         for (int i = 0; i < k; i++) {
-            afinitat -= Punt.getDistancia(x[i], x[k]) / graf[i][k];
+            afinitat += Punt.getDistancia(x[i], x[k]) / graf[i][k];
             if (warehouse.getPrestatgeriaIdIn(x[k]) == warehouse.getPrestatgeriaIdIn(x[i])) {
                 samePrest = true;
             }
         }
 
+        if (k == 0) {
+            System.out.println("vMillor hauria de ser 0");
+        }
+
+        if (m.getAfinDist() < 0) {
+            System.out.println("cagada pasturets");
+        }
+
         m.decNumProdIn(x[k]);
-        m.setAfinDist(afinitat);
+        m.subtractAfinDist(afinitat);
         if (!samePrest) m.decNumPrest();
     }
 
