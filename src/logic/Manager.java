@@ -1,7 +1,9 @@
 package logic;
 
 import helpers.DataReader;
+import logic.distribucio.Backtracking;
 import model.Producte;
+import model.Punt;
 import model.Warehouse;
 
 import java.util.Scanner;
@@ -10,6 +12,7 @@ public class Manager {
     private Producte[] productes;
     private float[][] graf;
     private Warehouse warehouse;
+    private Backtracking backtracking;
     private Scanner sc;
 
     public Manager() {
@@ -22,16 +25,30 @@ public class Manager {
 
         switch (option) {
             case 1:
+                //TODO
                 System.out.println("\r\nIntrodueix l'ubicació del fitxer que conté la informació del magatzem: ");
-                warehouse = dataReader.readWarehouse(sc.next());
+                sc.next();
+                warehouse = dataReader.readWarehouse("data/warehouse.json");
                 break;
+
             case 2:
                 System.out.println("\r\nIntrodueix l'ubicació del fitxer que conté la informació del productes: ");
-                productes = dataReader.readProducts(sc.next());
+                sc.next();
+                productes = dataReader.readProducts("data/products.json");
                 System.out.println("\r\nIntrodueix l'ubicació del graf: ");
-                graf = dataReader.readGraph(sc.next(), productes);
-
+                sc.next();
+                graf = dataReader.readGraph("data/graph.txt", productes);
                 break;
+
+            case 3:
+                if (warehouse == null || productes == null || graf == null) {
+                    System.out.println("\r\nError, les dades no estan inicialitzades. " +
+                            "Faci les opcions 1 i 2 abans de demanar una distribució.\r\n");
+                } else {
+                    backtracking = new Backtracking(warehouse, productes, graf);
+                    backtracking.cercaDsitribucioMillores();
+                    Punt[] distribucio = backtracking.getxMillor();
+                }
         }
     }
 

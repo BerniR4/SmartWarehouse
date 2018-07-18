@@ -8,7 +8,8 @@ public class Backtracking {
     private final static int V_INDEF = -1;
 
     private Punt[] xMillor;
-    private double vMillor;
+    private double vMillorAfin;     //millor valor d'afinitat entre els productes
+    private int vMillorPrest;       //millor valor de prestatgeries utilitzades
     private Warehouse warehouse;
     private Producte[] productes;
     private float[][] graf;
@@ -24,12 +25,22 @@ public class Backtracking {
      * fitupus
      */
 
-    public Backtracking(Warehouse warehouse, Producte[] productes) {
-        this.xMillor = null;
-        this.vMillor = V_INDEF;
+    public Backtracking(Warehouse warehouse, Producte[] productes, float[][] graf) {
+        this.xMillor = new Punt[productes.length];
+        for (int i = 0; i < xMillor.length; i++) {
+            xMillor[i] = new Punt();
+        }
+        this.vMillorPrest = V_INDEF;
+        this.vMillorAfin = V_INDEF;
         this.warehouse = warehouse;
         this.productes = productes;
+        this.graf = graf;
     }
+
+    public Punt[] getxMillor() {
+        return xMillor;
+    }
+
     /* Solució 1: array d'n caselles on cada posició és un producte i el que hi ha a la casella indica a quin prestatge està.
      *          +Menys memoria.
      *          +Sembla més senzill.
@@ -52,22 +63,35 @@ public class Backtracking {
 
     // És solució quan s'han col·locat tots els productes.
 
-    public Punt[] backtrackingMillores(Punt[] x, int k, Marcatge m) {
-        x[k] = new Punt();
+    public void cercaDsitribucioMillores() {
+        backtrackingMillores(new Punt[productes.length], 0, new Marcatge(warehouse.getMaxY(), warehouse.getMaxX()));
+    }
+
+    private void backtrackingMillores(Punt[] x, int k, Marcatge m) {
+        x[k] = new Punt(-1,0);
         while (hiHaSuccessor(x[k])) {
             seguentGerma(x, k);
             marcar(x, k, m);
+
             if (esSolucio(k)) {
-                //TODO mirar si es bona i tractar-la
+                if (esBona(x, k, m)) {
+                    tractarSolucio(x, k, m);
+                }
             } else {
-                //TODO mirar si es bona o si s'ha de desfer.
+                if (esBona(x, k, m)) {
+                    if (m.getNumPrest() < vMillorPrest || vMillorPrest == V_INDEF ||
+                            (m.getNumPrest() == vMillorPrest && m.getAfinDist() < vMillorAfin)) {
+                        backtrackingMillores(x, k + 1, m);
+                    }
+                }
             }
+
+            desmarcar(x, k, m);
         }
-        return x;
     }
 
     private boolean hiHaSuccessor(Punt p) {
-        return (p.getX() < warehouse.getMaxX() - 1) || (p.getY() < warehouse.getMaxY());
+        return (p.getX() != warehouse.getMaxX() - 1) || (p.getY() != warehouse.getMaxY() - 1);
     }
 
     private void seguentGerma(Punt[] x, int k) {
@@ -81,7 +105,7 @@ public class Backtracking {
     }
 
     private boolean esSolucio(int k) {
-        return k == productes.length;
+        return k == productes.length - 1;
     }
 
     private boolean esBona(Punt[] x, int k, Marcatge m) {
@@ -93,7 +117,7 @@ public class Backtracking {
         boolean samePrest = false;
 
         for (int i = 0; i < k; i++) {
-            afinitat += Punt.getDistancia(x[i], x[k]) * graf[i][k];
+            afinitat += Punt.getDistancia(x[i], x[k]) / graf[i][k];
             if (warehouse.getPrestatgeriaIdIn(x[k]) == warehouse.getPrestatgeriaIdIn(x[i])) {
                 samePrest = true;
             }
@@ -102,6 +126,34 @@ public class Backtracking {
         m.incNumProdIn(x[k]);
         m.setAfinDist(afinitat);
         if (!samePrest) m.incNumPrest();
+    }
+
+    private void desmarcar(Punt[] x, int k, Marcatge m) {
+        double afinitat = m.getAfinDist();
+        boolean samePrest = false;
+
+        for (int i = 0; i < k; i++) {
+            afinitat -= Punt.getDistancia(x[i], x[k]) / graf[i][k];
+            if (warehouse.getPrestatgeriaIdIn(x[k]) == warehouse.getPrestatgeriaIdIn(x[i])) {
+                samePrest = true;
+            }
+        }
+
+        m.decNumProdIn(x[k]);
+        m.setAfinDist(afinitat);
+        if (!samePrest) m.decNumPrest();
+    }
+
+    private void tractarSolucio(Punt[] x, int k, Marcatge m) {
+        if (m.getNumPrest() < vMillorPrest || vMillorPrest == V_INDEF ||
+                (m.getNumPrest() == vMillorPrest && m.getAfinDist() < vMillorAfin)) {
+            vMillorAfin = m.getAfinDist();
+            vMillorPrest = m.getNumPrest();
+            for (int i = 0; i < x.length; i++) {
+                xMillor[i].setX(x[i].getX());
+                xMillor[i].setY(x[i].getY());
+            }
+        }
     }
 
 }

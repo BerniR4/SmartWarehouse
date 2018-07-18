@@ -3,6 +3,7 @@ package helpers;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 import model.Producte;
 import model.Punt;
@@ -58,6 +59,8 @@ public class DataReader {
 
         } catch (FileNotFoundException e) {
             System.out.println("\r\nError, no s'ha trobat el fitxer del magatzem.\r\n");
+        } catch (JsonSyntaxException e) {
+            System.out.println("\r\nError, el format del fitxer no és correcte.\r\n");
         }
 
         return null;
@@ -73,6 +76,8 @@ public class DataReader {
             return productes;
         } catch (FileNotFoundException e) {
             System.out.println("\r\nError, no s'ha trobat el fitxer de productes.\r\n");
+        } catch (JsonSyntaxException e) {
+            System.out.println("\r\nError, el format del fitxer no és correcte.\r\n");
         }
         return null;
     }
