@@ -22,4 +22,16 @@ public class Warehouse {
     public int getPrestatgeriaIdIn(Punt p) {
         return shelves[p.getY()][p.getX()];
     }
+
+    public boolean[][] getBoolMap() {
+        boolean[][] map = new boolean[getMaxY()][getMaxX()];
+        for (int i = 0; i < getMaxY(); i++) {
+            for (int j = 0; j < getMaxX(); j++){
+                if (shelves[i][j] != 0) {
+                    map[i][j] = true;
+                }
+            }
+        }
+        return map;
+    }
 }

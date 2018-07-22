@@ -21,8 +21,10 @@ public class Menu {
         System.out.println("\r\n1. Configurar magatzem");
         System.out.println("2. Carregar productes");
         System.out.println("3. Distribuir productes");
-        System.out.println("4. Servir comanda");
-        System.out.println("5. Sortir\r\n");
+        System.out.println("4. Distribuir productes (millores)");
+        System.out.println("5. Servir comanda");
+        System.out.println("6. Servir comanda (millores)");
+        System.out.println("7. Sortir\r\n");
         System.out.println("\r\nSel·lecciona una opcio:");
         this.demanarOpcio();
 

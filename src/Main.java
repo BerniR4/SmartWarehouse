@@ -14,7 +14,7 @@ public class Main {
         do {
             menu.mostrarMenu();
             manager.executeOption(menu.getOpcio());
-        }while(menu.getOpcio() != 5);
+        }while(menu.getOpcio() != 7);
 
         /*
          ****************
@@ -33,25 +33,8 @@ public class Main {
 
         // Creem el controlador
         BoxListener controlador = new BoxListener(view);
-        // Establim la relació entre la vista i el controlador
         view.setMapMouseListener(controlador);
 
-        /* Actualitzem el panell d'informació d'una casella en les diferents altures
-         * en, imaginariament, el punt (x,y)=(0,0).
-         */
-        view.setBoxInfo(
-                new String[] {
-                        "(x,y,z)=(0,0,0) P1 - ID: 1234",
-                        "(x,y,z)=(0,0,1) P2 - ID: 4321",
-                        "(x,y,z)=(0,0,2) (empty)"
-                }
-        );
-
-        view.setScoreInfo(5.6); // actualitzem el panell de puntuació de la distribució feta
-        view.setTrackCost(15);  // actualitzem el cost que té un recorregut realitzat
-
-        view.paintCell(3, 3, Color.RED);    // la casella en el punt (3,3) passarà a ser vermella
-        // Mostrem la vista
         view.setVisible(true);
 
     }

@@ -63,30 +63,23 @@ public class Backtracking {
 
     // És solució quan s'han col·locat tots els productes.
 
-    public void cercaDsitribucioMillores() {
-        backtrackingMillores(new Punt[productes.length], 0, new Marcatge(warehouse.getMaxY(), warehouse.getMaxX()));
+    public void cercaDsitribucio() {
+        backtracking(new Punt[productes.length], 0);
     }
 
-    private void backtrackingMillores(Punt[] x, int k, Marcatge m) {
+    private void backtracking(Punt[] x, int k) {
         x[k] = new Punt(-1,0);
         while (hiHaSuccessor(x[k])) {
             seguentGerma(x, k);
-            marcar(x, k, m);
-
             if (esSolucio(k)) {
-                if (esBona(x, k, m)) {
-                    tractarSolucio(x, k, m);
+                if (esBona(x, k)) {
+                    tractarSolucio(x);
                 }
             } else {
-                if (esBona(x, k, m)) {
-                    if (m.getNumPrest() < vMillorPrest || vMillorPrest == V_INDEF ||
-                            (m.getNumPrest() == vMillorPrest && m.getAfinDist() < vMillorAfin)) {
-                        backtrackingMillores(x, k + 1, m);
-                    }
+                if (esBona(x, k)) {
+                    backtracking(x, k + 1);
                 }
             }
-
-            desmarcar(x, k, m);
         }
     }
 
@@ -108,60 +101,45 @@ public class Backtracking {
         return k == productes.length - 1;
     }
 
-    private boolean esBona(Punt[] x, int k, Marcatge m) {
-        return (m.getNumProdIn(x[k])) <= 3 && (warehouse.getPrestatgeriaIdIn(x[k]) != 0);
-    }
-
-    private void marcar(Punt[] x, int k, Marcatge m) {
-        double afinitat = 0.0;
-        boolean samePrest = false;
-
+    private boolean esBona(Punt[] x, int k) {
+        int numProd = 0;
         for (int i = 0; i < k; i++) {
-            afinitat += Punt.getDistancia(x[i], x[k]) / graf[i][k];
-            if (warehouse.getPrestatgeriaIdIn(x[k]) == warehouse.getPrestatgeriaIdIn(x[i])) {
-                samePrest = true;
+            if (x[k].getX() == x[i].getX() && x[k].getY() == x[i].getY()) {
+                numProd++;
             }
         }
 
-        m.incNumProdIn(x[k]);
-        m.addAfinDist(afinitat);
-        if (!samePrest) m.incNumPrest();
+        return (numProd < 3) && (warehouse.getPrestatgeriaIdIn(x[k]) != 0);
     }
 
-    private void desmarcar(Punt[] x, int k, Marcatge m) {
+    private void tractarSolucio(Punt[] x) {
         double afinitat = 0.0;
         boolean samePrest = false;
+        int numPrest = 0;
 
-        for (int i = 0; i < k; i++) {
-            afinitat += Punt.getDistancia(x[i], x[k]) / graf[i][k];
-            if (warehouse.getPrestatgeriaIdIn(x[k]) == warehouse.getPrestatgeriaIdIn(x[i])) {
-                samePrest = true;
+        for (int i = 0; i < x.length; i++){
+            for (int j = 0; j < i; j++) {
+                afinitat += Punt.getDistancia(x[i], x[j]) / graf[i][j];
+                if (warehouse.getPrestatgeriaIdIn(x[j]) == warehouse.getPrestatgeriaIdIn(x[i])) {
+                    samePrest = true;
+                }
             }
+            if (!samePrest) {
+                numPrest++;
+            }
+            samePrest = false;
         }
 
-        if (k == 0) {
-            System.out.println("vMillor hauria de ser 0");
-        }
+        long vAfinDist = (long) Math.floor(afinitat * Math.pow(10, 6));
 
-        if (m.getAfinDist() < 0) {
-            System.out.println("cagada pasturets");
-        }
-
-        m.decNumProdIn(x[k]);
-        m.subtractAfinDist(afinitat);
-        if (!samePrest) m.decNumPrest();
-    }
-
-    private void tractarSolucio(Punt[] x, int k, Marcatge m) {
-        if (m.getNumPrest() < vMillorPrest || vMillorPrest == V_INDEF ||
-                (m.getNumPrest() == vMillorPrest && m.getAfinDist() < vMillorAfin)) {
-            vMillorAfin = m.getAfinDist();
-            vMillorPrest = m.getNumPrest();
+        if (numPrest < vMillorPrest || vMillorPrest == V_INDEF ||
+                (numPrest == vMillorPrest && vAfinDist < vMillorAfin)) {
+            vMillorAfin = vAfinDist;
+            vMillorPrest = numPrest;
             for (int i = 0; i < x.length; i++) {
                 xMillor[i].setX(x[i].getX());
                 xMillor[i].setY(x[i].getY());
             }
         }
     }
-
 }
