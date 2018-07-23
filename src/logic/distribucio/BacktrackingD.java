@@ -4,7 +4,7 @@ import model.Producte;
 import model.Punt;
 import model.Warehouse;
 
-public class Backtracking {
+public class BacktrackingD {
     private final static int V_INDEF = -1;
 
     private Punt[] xMillor;
@@ -17,15 +17,32 @@ public class Backtracking {
     /*
      * tipus
      *      Configuracio = array [1..MAX_PRODUCTES] de Punt
-     *      Marcatge = registre
-     *                      numProd: array [1..MAX_Y] de array [1..MAX_X] de enter
-     *                      relacioDistancia: real
-     *                      numPrestatgeries: int
-     *                 firegistre
      * fitupus
      */
 
-    public Backtracking(Warehouse warehouse, Producte[] productes, double[][] graf) {
+    /* Proposta 1: array d'n caselles on cada posició és un producte i el que hi ha a la casella indica a quin prestatge està.
+     *          + Menys memoria.
+     *          + Sembla més senzill.
+     *          + Per la fase 2 millor
+     *          - Funció esBona més costosa.
+     */
+
+    /* Proposta 2: matriu de la mida del magatzem, on a cada casella hi ha quins productes hi van.
+     *          + Funció esBona més ràpida.
+     *          - Més memoria.
+     *          - Per la fase 2 anirà pitjor
+     */
+
+    // S'utilitzarà la proposta 1 i, la proposta 2 es farà servir com a marcatge.
+
+    // La funció a reduir serà la distancia entre els productes per la seva relació (graf) i el nombre de prestatgeries utilitzades (més important).
+
+    // Una configuració serà posible si el producte està situat en una prestatgeria i en aquella prestatgeria
+    // no hi ha més de 3 productes.
+
+    // És solució quan s'han col·locat tots els productes.
+
+    public BacktrackingD(Warehouse warehouse, Producte[] productes, double[][] graf) {
         this.xMillor = new Punt[productes.length];
         for (int i = 0; i < xMillor.length; i++) {
             xMillor[i] = new Punt();
@@ -48,28 +65,6 @@ public class Backtracking {
     public int getvMillorPrest() {
         return vMillorPrest;
     }
-
-    /* Solució 1: array d'n caselles on cada posició és un producte i el que hi ha a la casella indica a quin prestatge està.
-     *          +Menys memoria.
-     *          +Sembla més senzill.
-     *          +Per la fase 2 millor
-     *          -Funció esBona més costosa.
-     */
-
-    /* Solució 2: matriu de la mida del magatzem, on a cada casella hi ha quins productes hi van.
-     *          +Funció esBona més ràpida.
-     *          -Més memoria.
-     *          -Per la fase 2 anirà pitjor
-     */
-
-    // S'utilitzarà la solució 1 i, la solució 2 es farà servir com a marcatge.
-
-    // La funció a reduir serà la distancia entre els productes per la seva relació (graf) i el nombre de prestatgeries utilitzades (més important).
-
-    // Una configuració serà posible si el producte està situat en una prestatgeria i en aquella prestatgeria
-    // no hi ha més de 3 productes.
-
-    // És solució quan s'han col·locat tots els productes.
 
     public void cercaDsitribucio() {
         backtracking(new Punt[productes.length], 0);
@@ -112,7 +107,7 @@ public class Backtracking {
     private boolean esBona(Punt[] x, int k) {
         int numProd = 0;
         for (int i = 0; i < k; i++) {
-            if (x[k].getX() == x[i].getX() && x[k].getY() == x[i].getY()) {
+            if (x[k].equals(x[i])) {
                 numProd++;
             }
         }

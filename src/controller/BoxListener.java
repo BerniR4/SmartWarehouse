@@ -47,6 +47,12 @@ public class BoxListener implements MouseListener {
         view.setTrackCost(value);
     }
 
+    public void paintTrack(Punt[] recorregut, int k) {
+        for (int i = 1; i <= k; i++) {
+            view.paintCell(recorregut[i].getX(), recorregut[i].getY(), Color.YELLOW);
+        }
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
 

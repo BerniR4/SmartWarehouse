@@ -92,22 +92,13 @@ public class DataReader {
                 String parts[] = line.split(" ");
                 int id1 = Integer.parseInt(parts[0]);
                 int id2 = Integer.parseInt(parts[1]);
-                graf[getPositionFromID(id1, productes)][getPositionFromID(id2, productes)] = Double.parseDouble(parts[2]);
+                graf[Producte.getPositionFromID(id1, productes)][Producte.getPositionFromID(id2, productes)] = Double.parseDouble(parts[2]);
             }
         } catch (IOException e) {
             System.out.println("\r\nError, no s'ha trobat el fitxer del graf.\r\n");
         }
 
         return graf;
-    }
-
-    private int getPositionFromID(int id, Producte[] productes) {
-        for (int i = 0; i < productes.length; i++) {
-            if (productes[i].isID(id)){
-                return i;
-            }
-        }
-        return -1;
     }
 
 }

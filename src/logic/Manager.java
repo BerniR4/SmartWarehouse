@@ -2,18 +2,18 @@ package logic;
 
 import controller.BoxListener;
 import helpers.DataReader;
-import logic.distribucio.Backtracking;
-import logic.distribucio.BacktrackingMillores;
+import logic.comanda.BacktrackingMilloresC;
+import logic.distribucio.BacktrackingD;
+import logic.distribucio.BacktrackingMilloresD;
 import model.DataManager;
-import model.Punt;
-import model.Warehouse;
+import model.Producte;
 import view.WarehouseView;
 
 import java.util.Scanner;
 
 public class Manager {
     private Scanner sc;
-    private BoxListener controlador;
+    private BoxListener controller;
     private DataManager dataManager;
 
     public Manager() {
@@ -34,8 +34,8 @@ public class Manager {
 
                 WarehouseView view = new WarehouseView(dataManager.getBoolMap(), dataManager.getWarehouseEntranceX(),
                         dataManager.getWarehouseEntranceY());
-                controlador = new BoxListener(view, dataManager);
-                view.setMapMouseListener(controlador);
+                controller = new BoxListener(view, dataManager);
+                view.setMapMouseListener(controller);
 
                 view.setVisible(true);
 
@@ -55,11 +55,11 @@ public class Manager {
                     System.out.println("\r\nError, les dades no estan inicialitzades. " +
                             "Faci les opcions 1 i 2 abans de demanar una distribució.\r\n");
                 } else {
-                    Backtracking backtracking = new Backtracking(dataManager.getWarehouse(), dataManager.getProductes(),
+                    BacktrackingD backtrackingD = new BacktrackingD(dataManager.getWarehouse(), dataManager.getProductes(),
                             dataManager.getGraf());
-                    backtracking.cercaDsitribucio();
-                    dataManager.setConfiguracio(backtracking.getxMillor());
-                    controlador.setScoreInfo(backtracking.getvMillorPrest(), backtracking.getvMillorAfin());
+                    backtrackingD.cercaDsitribucio();
+                    dataManager.setDistribucio(backtrackingD.getxMillor());
+                    controller.setScoreInfo(backtrackingD.getvMillorPrest(), backtrackingD.getvMillorAfin());
                 }
                 break;
 
@@ -68,15 +68,55 @@ public class Manager {
                     System.out.println("\r\nError, les dades no estan inicialitzades. " +
                             "Faci les opcions 1 i 2 abans de demanar una distribució.\r\n");
                 } else {
-                    BacktrackingMillores backtrackingMillores = new BacktrackingMillores(dataManager.getWarehouse(),
+                    BacktrackingMilloresD backtrackingMillores = new BacktrackingMilloresD(dataManager.getWarehouse(),
                             dataManager.getProductes(), dataManager.getGraf());
                     backtrackingMillores.cercaDsitribucioMillores();
-                    dataManager.setConfiguracio(backtrackingMillores.getxMillor());
-                    controlador.setScoreInfo(backtrackingMillores.getvMillorPrest(),
+                    dataManager.setDistribucio(backtrackingMillores.getxMillor());
+                    controller.setScoreInfo(backtrackingMillores.getvMillorPrest(),
                             backtrackingMillores.getvMillorAfin());
                 }
             break;
+
+            case 5:
+                if (!dataManager.isDistOk()) {
+                    System.out.println("\r\nError, els productes no estan distribuïts. " +
+                            "Faci la opció 3 o 4 abans de fer una comanda.\r\n");
+                } else {
+                    System.out.println("\r\nIntrodueix l'ubicació del fitxer que conté la informació de la comanda: ");
+                    sc.next();
+                    dataManager.setProductes(dataReader.readProducts("data/products.json"));
+
+                }
+                break;
+
+            case 6:
+                if (!dataManager.isDistOk()) {
+                    System.out.println("\r\nError, els productes no estan distribuïts. " +
+                            "Faci la opció 3 o 4 abans de fer una comanda.\r\n");
+                } else {
+
+                    System.out.println("\r\nIntrodueix l'ubicació del fitxer que conté la informació de la comanda: ");
+                    sc.next();
+                    Producte[] comanda = dataReader.readProducts("data/products2.json");
+                    if (inStock(comanda)) {
+                        BacktrackingMilloresC backtrackingMilloresC = new BacktrackingMilloresC(dataManager.getWarehouse(),
+                                comanda, dataManager.getDistribucio(), dataManager.getProductes());
+                        backtrackingMilloresC.cercaRecorregutMillores();
+                        controller.paintTrack(backtrackingMilloresC.getxMillor(), backtrackingMilloresC.getvMillor());
+                        controller.setTrackCost(backtrackingMilloresC.getvMillor());
+                    } else {
+                        System.out.println("\r\nError, algun producte de la comanda no està al magatzem.\r\n");
+                    }
+                }
+                break;
         }
+    }
+
+    private boolean inStock(Producte[] comanda) {
+        for (Producte p : comanda) {
+            if (Producte.getPositionFromID(p.getId(), dataManager.getProductes()) == -1) return false;
+        }
+        return true;
     }
 
 }

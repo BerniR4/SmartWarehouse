@@ -31,4 +31,18 @@ public class Punt {
     public static double getDistancia(Punt to, Punt from) {
         return Math.hypot(to.x - from.x, to.y - from.y);
     }
+
+    public static boolean isAdjacent(Punt p1, Punt p2) {
+        return (getDistancia(p1, p2) == 1);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Punt) {
+            Punt p = (Punt)obj;
+            return (x == p.x) && (y == p.y);
+        }
+        return super.equals(obj);
+    }
+
 }

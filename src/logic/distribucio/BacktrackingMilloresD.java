@@ -4,7 +4,7 @@ import model.Producte;
 import model.Punt;
 import model.Warehouse;
 
-public class BacktrackingMillores {
+public class BacktrackingMilloresD {
     private final static int V_INDEF = -1;
 
     private Punt[] xMillor;
@@ -25,7 +25,7 @@ public class BacktrackingMillores {
      * fitupus
      */
 
-    public BacktrackingMillores(Warehouse warehouse, Producte[] productes, double[][] graf) {
+    public BacktrackingMilloresD(Warehouse warehouse, Producte[] productes, double[][] graf) {
         this.xMillor = new Punt[productes.length];
         for (int i = 0; i < xMillor.length; i++) {
             xMillor[i] = new Punt();

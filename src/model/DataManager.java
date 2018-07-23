@@ -4,7 +4,7 @@ public class DataManager {
     private Warehouse warehouse;
     private Producte[] productes;
     private double[][] graf;
-    private Punt[] configuracio;
+    private Punt[] distribucio;
 
     public DataManager() {
     }
@@ -33,12 +33,12 @@ public class DataManager {
         this.graf = graf;
     }
 
-    public Punt[] getConfiguracio() {
-        return configuracio;
+    public Punt[] getDistribucio() {
+        return distribucio;
     }
 
-    public void setConfiguracio(Punt[] configuracio) {
-        this.configuracio = configuracio;
+    public void setDistribucio(Punt[] distribucio) {
+        this.distribucio = distribucio;
     }
 
 
@@ -66,12 +66,16 @@ public class DataManager {
         return !(warehouse == null || productes == null || graf == null);
     }
 
+    public boolean isDistOk() {
+        return (distribucio != null);
+    }
+
     public String[] getInfo(Punt p) {
         String[] info = new String[3];
         int i = 0;
-        if (configuracio != null){
-            for (int j = 0; j < configuracio.length; j++) {
-                if (configuracio[j].getX() == p.getX() && configuracio[j].getY() == p.getY()) {
+        if (distribucio != null){
+            for (int j = 0; j < distribucio.length; j++) {
+                if (distribucio[j].equals(p)) {
                     info[i] = String.format("(x,y,z)=(%d,%d,%d) %s", p.getX(), p.getY(), i, productes[j].toString());
                     i++;
                 }
