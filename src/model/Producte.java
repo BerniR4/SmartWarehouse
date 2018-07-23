@@ -18,4 +18,10 @@ public class Producte {
         return this.id == id;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(name).append(" - ID: ").append(id);
+        return sb.toString();
+    }
 }

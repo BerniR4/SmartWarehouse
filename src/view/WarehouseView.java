@@ -17,10 +17,10 @@ import java.util.ArrayList;
  */
 public class WarehouseView extends JFrame {
 
-    private static final int MIN_WIDTH  = 450;
-    private static final int MIN_HEIGHT = 300;
+    private static final int MIN_WIDTH  = 675;
+    private static final int MIN_HEIGHT = 450;
 
-    private static final String MIN_SCORE_LABEL_FORMAT      = "Min score: %f";
+    private static final String MIN_SCORE_LABEL_FORMAT      = "Min shelves: %d Min score: %d";
     private static final String TRACK_COST_LABEL_FORMAT     = "Track cost: %d";
 
 
@@ -117,7 +117,7 @@ public class WarehouseView extends JFrame {
 
         JPanel jpLeft = new JPanel();
         jpLeft.setLayout(new BorderLayout());
-        jlMinScore = new JLabel(String.format(MIN_SCORE_LABEL_FORMAT, 0.0d));
+        jlMinScore = new JLabel(String.format(MIN_SCORE_LABEL_FORMAT, 0, 0));
         jpLeft.add(jlMinScore, BorderLayout.CENTER);
         jpLeft.setBorder(BorderFactory.createTitledBorder("Distribution cost"));
 
@@ -178,9 +178,9 @@ public class WarehouseView extends JFrame {
      *
      * @param score El valor que es mostrarà.
      */
-    public void setScoreInfo(double score) {
+    public void setScoreInfo(int shelve, long score) {
 
-        this.jlMinScore.setText(String.format(MIN_SCORE_LABEL_FORMAT, score));
+        this.jlMinScore.setText(String.format(MIN_SCORE_LABEL_FORMAT, shelve, score));
     }
 
     /**

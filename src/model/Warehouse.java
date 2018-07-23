@@ -10,28 +10,21 @@ public class Warehouse {
     }
 
     public int getMaxY() {
-        if (shelves != null) return shelves.length;
-        return -1;
-    }
-
-    public int getMaxX() {
         if (shelves != null) return shelves[0].length;
         return -1;
     }
 
-    public int getPrestatgeriaIdIn(Punt p) {
-        return shelves[p.getY()][p.getX()];
+    public int getMaxX() {
+        if (shelves != null) return shelves.length;
+        return -1;
     }
 
-    public boolean[][] getBoolMap() {
-        boolean[][] map = new boolean[getMaxY()][getMaxX()];
-        for (int i = 0; i < getMaxY(); i++) {
-            for (int j = 0; j < getMaxX(); j++){
-                if (shelves[i][j] != 0) {
-                    map[i][j] = true;
-                }
-            }
-        }
-        return map;
+    public int getPrestatgeriaIdIn(Punt p) {
+        return shelves[p.getX()][p.getY()];
     }
+
+    public Punt getEntrance() {
+        return entrance;
+    }
+
 }

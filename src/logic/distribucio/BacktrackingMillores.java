@@ -41,6 +41,14 @@ public class BacktrackingMillores {
         return xMillor;
     }
 
+    public long getvMillorAfin() {
+        return vMillorAfin;
+    }
+
+    public int getvMillorPrest() {
+        return vMillorPrest;
+    }
+
     public void cercaDsitribucioMillores() {
         backtrackingMillores(new Punt[productes.length], 0, new Marcatge(warehouse.getMaxY(), warehouse.getMaxX()));
     }

@@ -41,6 +41,14 @@ public class Backtracking {
         return xMillor;
     }
 
+    public long getvMillorAfin() {
+        return vMillorAfin;
+    }
+
+    public int getvMillorPrest() {
+        return vMillorPrest;
+    }
+
     /* Solució 1: array d'n caselles on cada posició és un producte i el que hi ha a la casella indica a quin prestatge està.
      *          +Menys memoria.
      *          +Sembla més senzill.

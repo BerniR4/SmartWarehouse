@@ -27,7 +27,7 @@ public class DataReader {
 
             int aux0 = unparsed.getAsJsonObject("dim").get("max_x").getAsInt();
             int aux1 = unparsed.getAsJsonObject("dim").get("max_y").getAsInt();
-            shelves = new int[aux1][aux0];
+            shelves = new int[aux0][aux1];
 
             Punt entrance = new Punt();
             entrance.setY(unparsed.getAsJsonObject("entrance").get("y").getAsInt());
@@ -46,10 +46,10 @@ public class DataReader {
                 aux0 = shelveInfo.get("x_start").getAsInt();
                 aux1 = shelveInfo.get("y_start").getAsInt();
                 for (int j = 0; j < config.get(shelveInfo.get("config").getAsInt()); j++){
-                    if (shelveInfo.get("orientation").getAsString().equals("V")) {
-                        shelves[aux1 + j][aux0] = i + 1;
+                    if (shelveInfo.get("orientation").getAsString().equals("H")) {
+                        shelves[aux0 + j][aux1] = i + 1;
                     } else {
-                        shelves[aux1][aux0 + j] = i + 1;
+                        shelves[aux0][aux1 + j] = i + 1;
                     }
                 }
             }

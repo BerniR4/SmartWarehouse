@@ -1,5 +1,7 @@
 package controller;
 
+import model.DataManager;
+import model.Punt;
 import view.WarehouseView;
 
 import java.awt.*;
@@ -28,13 +30,21 @@ public class BoxListener implements MouseListener {
 
 
     private WarehouseView view;
-    // ...
+    private DataManager model;
 
 
 
-    public BoxListener(WarehouseView view) {
+    public BoxListener(WarehouseView view, DataManager model) {
         this.view = view;
-        // ...
+        this.model = model;
+    }
+
+    public void setScoreInfo(int shelve, long value) {
+        view.setScoreInfo(shelve, value);
+    }
+
+    public void setTrackCost(int value) {
+        view.setTrackCost(value);
     }
 
     @Override
@@ -45,9 +55,7 @@ public class BoxListener implements MouseListener {
         Point p = view.getBoxClickedPosition(point);
         if (p == null) System.out.println("null point");
         else {
-            // TODO: deixar a l'alumne per fer
-            // ...
-            System.out.println("han fet clic...");
+            view.setBoxInfo(model.getInfo(new Punt(p.x, p.y)));
         }
     }
 
