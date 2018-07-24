@@ -4,16 +4,7 @@ import model.Producte;
 import model.Punt;
 import model.Warehouse;
 
-public class BacktrackingMilloresD {
-    private final static int V_INDEF = -1;
-
-    private Punt[] xMillor;
-    private long vMillorAfin;     //millor valor d'afinitat entre els productes
-    private int vMillorPrest;       //millor valor de prestatgeries utilitzades
-    private Warehouse warehouse;
-    private Producte[] productes;
-    private double[][] graf;
-
+public class BacktrackingMilloresD extends BacktrackingD{
     /*
      * tipus
      *      Configuracio = array [1..MAX_PRODUCTES] de Punt
@@ -26,34 +17,15 @@ public class BacktrackingMilloresD {
      */
 
     public BacktrackingMilloresD(Warehouse warehouse, Producte[] productes, double[][] graf) {
-        this.xMillor = new Punt[productes.length];
-        for (int i = 0; i < xMillor.length; i++) {
-            xMillor[i] = new Punt();
-        }
-        this.vMillorPrest = V_INDEF;
-        this.vMillorAfin = V_INDEF;
-        this.warehouse = warehouse;
-        this.productes = productes;
-        this.graf = graf;
+        super(warehouse, productes, graf);
     }
 
-    public Punt[] getxMillor() {
-        return xMillor;
+    @Override
+    public void cercaDsitribucio() {
+        backtracking(new Punt[productes.length], 0, new Marcatge(warehouse.getMaxY(), warehouse.getMaxX()));
     }
 
-    public long getvMillorAfin() {
-        return vMillorAfin;
-    }
-
-    public int getvMillorPrest() {
-        return vMillorPrest;
-    }
-
-    public void cercaDsitribucioMillores() {
-        backtrackingMillores(new Punt[productes.length], 0, new Marcatge(warehouse.getMaxY(), warehouse.getMaxX()));
-    }
-
-    private void backtrackingMillores(Punt[] x, int k, Marcatge m) {
+    private void backtracking(Punt[] x, int k, Marcatge m) {
         x[k] = new Punt(-1,0);
         while (hiHaSuccessor(x[k])) {
             seguentGerma(x, k);
@@ -67,31 +39,13 @@ public class BacktrackingMilloresD {
                 if (esBona(x, k, m)) {
                     if (m.getNumPrest() < vMillorPrest || vMillorPrest == V_INDEF ||
                             (m.getNumPrest() == vMillorPrest && m.getAfinDist() < vMillorAfin)) {
-                        backtrackingMillores(x, k + 1, m);
+                        backtracking(x, k + 1, m);
                     }
                 }
             }
 
             desmarcar(x, k, m);
         }
-    }
-
-    private boolean hiHaSuccessor(Punt p) {
-        return (p.getX() != warehouse.getMaxX() - 1) || (p.getY() != warehouse.getMaxY() - 1);
-    }
-
-    private void seguentGerma(Punt[] x, int k) {
-        Punt p = x[k];
-        p.setX(p.getX() + 1);
-        if (p.getX() >= warehouse.getMaxX()) {
-            p.setX(0);
-            p.setY(p.getY() + 1);
-        }
-        x[k] = p;
-    }
-
-    private boolean esSolucio(int k) {
-        return k == productes.length - 1;
     }
 
     private boolean esBona(Punt[] x, int k, Marcatge m) {

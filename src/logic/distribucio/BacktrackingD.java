@@ -5,14 +5,14 @@ import model.Punt;
 import model.Warehouse;
 
 public class BacktrackingD {
-    private final static int V_INDEF = -1;
+    protected final static int V_INDEF = -1;
 
-    private Punt[] xMillor;
-    private long vMillorAfin;     //millor valor d'afinitat entre els productes
-    private int vMillorPrest;       //millor valor de prestatgeries utilitzades
-    private Warehouse warehouse;
-    private Producte[] productes;
-    private double[][] graf;
+    protected Punt[] xMillor;
+    protected long vMillorAfin;     //millor valor d'afinitat entre els productes
+    protected int vMillorPrest;       //millor valor de prestatgeries utilitzades
+    protected Warehouse warehouse;
+    protected Producte[] productes;
+    protected double[][] graf;
 
     /*
      * tipus
@@ -86,11 +86,11 @@ public class BacktrackingD {
         }
     }
 
-    private boolean hiHaSuccessor(Punt p) {
+    protected boolean hiHaSuccessor(Punt p) {
         return (p.getX() != warehouse.getMaxX() - 1) || (p.getY() != warehouse.getMaxY() - 1);
     }
 
-    private void seguentGerma(Punt[] x, int k) {
+    protected void seguentGerma(Punt[] x, int k) {
         Punt p = x[k];
         p.setX(p.getX() + 1);
         if (p.getX() >= warehouse.getMaxX()) {
@@ -100,7 +100,7 @@ public class BacktrackingD {
         x[k] = p;
     }
 
-    private boolean esSolucio(int k) {
+    protected boolean esSolucio(int k) {
         return k == productes.length - 1;
     }
 

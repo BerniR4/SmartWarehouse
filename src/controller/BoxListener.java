@@ -48,6 +48,16 @@ public class BoxListener implements MouseListener {
     }
 
     public void paintTrack(Punt[] recorregut, int k) {
+        boolean[][] map = model.getBoolMap();
+        for (int i = 0; i < map[0].length; i++) {
+            for (int j = 0; j < map.length; j++) {
+                if (!(map[j][i] ||
+                        (i == model.getWarehouseEntranceY() && j == model.getWarehouseEntranceX()))) {
+                    view.paintCell(j, i, Color.WHITE);
+                }
+            }
+        }
+
         for (int i = 1; i <= k; i++) {
             view.paintCell(recorregut[i].getX(), recorregut[i].getY(), Color.YELLOW);
         }
@@ -59,8 +69,7 @@ public class BoxListener implements MouseListener {
         Point point = e.getPoint();
 
         Point p = view.getBoxClickedPosition(point);
-        if (p == null) System.out.println("null point");
-        else {
+        if (p != null) {
             view.setBoxInfo(model.getInfo(new Punt(p.x, p.y)));
         }
     }
