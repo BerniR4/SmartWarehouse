@@ -4,9 +4,11 @@ import model.DataManager;
 import model.Punt;
 import view.WarehouseView;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
 
 
 /**
@@ -92,5 +94,16 @@ public class BoxListener implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
 
+    }
+
+    public void updateWarehouseView(WarehouseView view) {
+        this.model.setDistribucio(null);
+        this.view.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE );
+        this.view.dispatchEvent(new WindowEvent(view, WindowEvent.WINDOW_CLOSING));
+        this.view = view;
+    }
+
+    public void closeView() {
+        view.dispatchEvent(new WindowEvent(view, WindowEvent.WINDOW_CLOSING));
     }
 }

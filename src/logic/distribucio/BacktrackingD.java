@@ -106,13 +106,16 @@ public class BacktrackingD {
 
     private boolean esBona(Punt[] x, int k) {
         int numProd = 0;
-        for (int i = 0; i < k; i++) {
-            if (x[k].equals(x[i])) {
-                numProd++;
+        if (warehouse.getPrestatgeriaIdIn(x[k]) != 0) {
+            for (int i = 0; i < k; i++) {
+                if (x[k].equals(x[i])) {
+                    numProd++;
+                }
             }
+            return numProd < 3;
+        } else {
+            return false;
         }
-
-        return (numProd < 3) && (warehouse.getPrestatgeriaIdIn(x[k]) != 0);
     }
 
     private void tractarSolucio(Punt[] x) {

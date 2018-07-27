@@ -9,9 +9,9 @@ public class BacktrackingMilloresD extends BacktrackingD{
      * tipus
      *      Configuracio = array [1..MAX_PRODUCTES] de Punt
      *      Marcatge = registre
-     *                      numProd: array [1..MAX_Y] de array [1..MAX_X] de enter
+     *                      numProd: array [1..MAX_X] de array [1..MAX_Y] de enter
      *                      relacioDistancia: real
-     *                      numPrestatgeries: int
+     *                      numPrestatgeries: enter
      *                 firegistre
      * fitupus
      */

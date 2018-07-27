@@ -8,6 +8,7 @@ import logic.distribucio.BacktrackingD;
 import logic.distribucio.BacktrackingMilloresD;
 import model.DataManager;
 import model.Producte;
+import model.Warehouse;
 import view.WarehouseView;
 
 import java.util.Scanner;
@@ -28,27 +29,35 @@ public class Manager {
 
         switch (option) {
             case 1:
-                //TODO
                 System.out.println("\r\nIntrodueix l'ubicació del fitxer que conté la informació del magatzem: ");
-                sc.next();
-                dataManager.setWarehouse(dataReader.readWarehouse("data/warehouse.json"));
+                Warehouse w = dataReader.readWarehouse(sc.next());
+                if (w != null) {
+                    dataManager.setWarehouse(w);
 
-                WarehouseView view = new WarehouseView(dataManager.getBoolMap(), dataManager.getWarehouseEntranceX(),
-                        dataManager.getWarehouseEntranceY());
-                controller = new BoxListener(view, dataManager);
-                view.setMapMouseListener(controller);
+                    WarehouseView view = new WarehouseView(dataManager.getBoolMap(), dataManager.getWarehouseEntranceX(),
+                            dataManager.getWarehouseEntranceY());
+                    if (controller == null) {
+                        controller = new BoxListener(view, dataManager);
+                    } else {
+                        controller.updateWarehouseView(view);
+                    }
 
-                view.setVisible(true);
-
+                    view.setMapMouseListener(controller);
+                    view.setVisible(true);
+                }
                 break;
 
             case 2:
                 System.out.println("\r\nIntrodueix l'ubicació del fitxer que conté la informació del productes: ");
-                sc.next();
-                dataManager.setProductes(dataReader.readProducts("data/products.json"));
-                System.out.println("\r\nIntrodueix l'ubicació del graf: ");
-                sc.next();
-                dataManager.setGraf(dataReader.readGraph("data/graph.txt", dataManager.getProductes()));
+                Producte[] p = dataReader.readProducts(sc.next());
+                if (p != null) {
+                    dataManager.setProductes(p);
+                    System.out.println("\r\nIntrodueix l'ubicació del graf: ");
+                    double[][] g = dataReader.readGraph(sc.next(), p);
+                    if (g != null) {
+                        dataManager.setGraf(g);
+                    }
+                }
                 break;
 
             case 3:
@@ -84,9 +93,8 @@ public class Manager {
                             "Faci la opció 3 o 4 abans de fer una comanda.\r\n");
                 } else {
                     System.out.println("\r\nIntrodueix l'ubicació del fitxer que conté la informació de la comanda: ");
-                    sc.next();
-                    Producte[] comanda = dataReader.readProducts("data/products2.json");
-                    if (inStock(comanda)) {
+                    Producte[] comanda = dataReader.readProducts(sc.next());
+                    if (comanda != null && inStock(comanda)) {
                         BacktrackingC backtrackingC = new BacktrackingC(dataManager.getWarehouse(),
                                 comanda, dataManager.getDistribucio(), dataManager.getProductes());
                         backtrackingC.cercaRecorregut();
@@ -105,9 +113,8 @@ public class Manager {
                             "Faci la opció 3 o 4 abans de fer una comanda.\r\n");
                 } else {
                     System.out.println("\r\nIntrodueix l'ubicació del fitxer que conté la informació de la comanda: ");
-                    sc.next();
-                    Producte[] comanda = dataReader.readProducts("data/products2.json");
-                    if (inStock(comanda)) {
+                    Producte[] comanda = dataReader.readProducts(sc.next());
+                    if (comanda != null && inStock(comanda)) {
                         BacktrackingMilloresC backtrackingMilloresC = new BacktrackingMilloresC(dataManager.getWarehouse(),
                                 comanda, dataManager.getDistribucio(), dataManager.getProductes());
                         backtrackingMilloresC.cercaRecorregut();
@@ -117,6 +124,10 @@ public class Manager {
                         System.out.println("\r\nError, algun producte de la comanda no està al magatzem.\r\n");
                     }
                 }
+                break;
+
+            case 7:
+                controller.closeView();
                 break;
         }
     }

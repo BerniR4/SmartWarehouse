@@ -6,6 +6,7 @@ import model.Warehouse;
 
 public class BacktrackingC {
     protected final static int V_INDEF = -1;
+    protected final static int V_VISITES = 1; //Vegades que el robot pot passar per un mateix punt
 
     protected Punt[] xMillor;
     protected int vMillor;
@@ -40,6 +41,7 @@ public class BacktrackingC {
     // La funció a reduir és el camí que segueix el robot (estarà indicat per k quan es sigui solució).
 
     // El marcatge podria ser un array de la mida dels productes de la comanda on es desi si s'ha agafat el producte o no.
+    // També es pot marcar quants cops passa el robot per a cada casella.
 
     // Una configuració serà solució quan s'hagin agafat tots els productes.
 
@@ -66,7 +68,6 @@ public class BacktrackingC {
     public void cercaRecorregut() {
         Punt[] x = new Punt[warehouse.getMaxX() * warehouse.getMaxY()];
         x[0] = new Punt(warehouse.getEntrance().getX(), warehouse.getEntrance().getY());
-        int[] m = new int[comanda.length];
         if (!esSolucio(x, 0)) {
             backtracking(x, 1, 0);
         } else {
@@ -150,10 +151,16 @@ public class BacktrackingC {
         return ok;
     }
 
-    protected boolean esBona(Punt[] x, int k) {
+    private boolean esBona(Punt[] x, int k) {
+        int vegadesVisitat = 0;
+        for (int i = 0; i <= k; i++) {
+            if (x[i].equals(x[k])) {
+                vegadesVisitat++;
+            }
+        }
         return (x[k].getY() < warehouse.getMaxY() && x[k].getY() >= 0
                 && x[k].getX() < warehouse.getMaxX() && x[k].getX() >= 0
-                && warehouse.getPrestatgeriaIdIn(x[k]) == 0);
+                && warehouse.getPrestatgeriaIdIn(x[k]) == 0 && vegadesVisitat <= V_VISITES);
     }
 
     protected void tractarSolucio(Punt[] x, int k) {

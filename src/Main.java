@@ -15,16 +15,6 @@ public class Main {
             menu.mostrarMenu();
             manager.executeOption(menu.getOpcio());
         }while(menu.getOpcio() != 7);
-
-        /*
-         ****************
-         * SOFTWARE BASE
-         ****************
-         */
-
-        // Creem el controlador
-
-
     }
 
 }
